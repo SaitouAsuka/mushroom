@@ -1,14 +1,10 @@
-from mushroom import Mushroom
-import typing
-
-def say(name, me="me"):
-    print('Hello {}, this is {}.'.format(name, me))
+import mushroom
+import requests
 
 
-def adder(a:typing.List[int]):
-    print(a)
+def hello(name="World"):
+    print("Hello {}".format(name))
 
 
-if __name__ == '__main__':
-    app = Mushroom(say)
-    app()
+if __name__ == "__main__":
+    mushroom.Mushroom(hello)

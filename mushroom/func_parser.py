@@ -1,5 +1,6 @@
 # one command type console app
 from __future__ import absolute_import
+from re import findall
 from types import FunctionType as function
 import mushroom.arg_builder as arg_builder
 
@@ -9,9 +10,9 @@ def func_parser(func:function):
 
     """
     args_cnt = func.__code__.co_argcount
-    func_varnames = func.__code__.co_varnames
+    func_varnames = func.__code__.co_varnames[:args_cnt]
     args_dtypes = func.__annotations__
-    default_flags = fetch_defaults(func)
+    default_flags = fetch_defaults(func, func_varnames)
 
     if args_cnt == 0:
         # can run directly
@@ -26,13 +27,12 @@ def func_parser(func:function):
         func(**kwargs)
 
 
-def fetch_defaults(func):
+def fetch_defaults(func, func_varnames):
     """
     fetch default values for the function
     return a dict
     """
     func_defaults = func.__defaults__
-    func_varnames = func.__code__.co_varnames
 
     func_defaults_dict = {}
     if not func_defaults:
