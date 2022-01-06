@@ -1,0 +1,11 @@
+README.md
+setup.py
+mushroom/__init__.py
+mushroom/arg_builder.py
+mushroom/core.py
+mushroom/func_parser.py
+mushroom.egg-info/PKG-INFO
+mushroom.egg-info/SOURCES.txt
+mushroom.egg-info/dependency_links.txt
+mushroom.egg-info/not-zip-safe
+mushroom.egg-info/top_level.txt
