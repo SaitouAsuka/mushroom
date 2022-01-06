@@ -36,15 +36,20 @@ def argument_add(parser, var_name, var_dtype, func_default_var):
 
     if var_dtype == bool:
         # bool type
-        parser.add_argument('--{}'.format(var_name), action='store_true', help='{}'.format(var_name))
+        flag = "True" if func_default_var else "False"
+        actions = {
+            "False": "store_true",
+            "True": "store_false",
+        }
+        parser.add_argument('--{}'.format(var_name), action=actions[flag], help='{}, deafult:{}, it will be {} if it\'s applied.'.format(var_name, flag, "False" if flag == "True" else "True"))
     elif isinstance(var_dtype, typing._GenericAlias):
         # list type
         dtype_fetch = re.findall(r'\[(.*)\]', str(var_dtype))
         dtype = dtype_fetch[0] if dtype_fetch else str
-        parser.add_argument('--{}'.format(var_name), nargs='+', type=type_dict[dtype], help='{}'.format(var_name))
+        parser.add_argument('--{}'.format(var_name), nargs='+', type=type_dict[dtype], help='{}, element type: {}'.format(var_name, dtype))
     else:
         # other type
         if func_default_var:
-            parser.add_argument('--{}'.format(var_name), type=var_dtype, default=func_default_var, help='{}, default {}'.format(var_name, func_default_var))
+            parser.add_argument('--{}'.format(var_name), type=var_dtype, default=func_default_var, help='{}, default {}, type:{}'.format(var_name, func_default_var, var_dtype.__name__))
         else:
-            parser.add_argument('--{}'.format(var_name), type=var_dtype, required=True, help='{}'.format(var_name))
+            parser.add_argument('--{}'.format(var_name), type=var_dtype, required=True, help='{}, type:{}'.format(var_name, var_dtype.__name__))
