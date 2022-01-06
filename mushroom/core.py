@@ -9,4 +9,9 @@ def Mushroom(func):
     one command type console app
     """
     if isinstance(func, function):
-        func_parser(func)
+        rslt = func_parser(func)
+
+
+    if rslt:
+        # 如果return就会执行输出
+        print(rslt)

@@ -4,21 +4,27 @@ import re
 import typing
 
 
-def build_blank_parser(func_name):
+def build_blank_parser(func_name, func_doc=""):
     """
     No arguments, just return the parser object
     :return: argparse object
     """
-    parser = argparse.ArgumentParser(description='Function {} No arguments, run directly'.format(func_name))
+    if not func_doc:
+        func_doc = 'Function {} No arguments, run directly'.format(func_name)
+
+    parser = argparse.ArgumentParser(description=func_doc)
     return parser
 
 
-def build_args_parser(func_vars, func_dtypes, func_default_vars, func_name):
+def build_args_parser(func_vars, func_dtypes, func_default_vars, func_name, func_doc=""):
     """
     Build a parser according to the function vars
     : return: argparse object
     """
-    parser = argparse.ArgumentParser(description='Function {} Arguments parser, if args are not given, it will be regarded as a string.'.format(func_name))
+    if not func_doc:
+        func_doc = 'Function {} Arguments parser, if args are not given, it will be regarded as a string.'.format(func_name)
+
+    parser = argparse.ArgumentParser(description=func_doc)
     for var_name in func_vars:
         argument_add(parser, var_name, func_dtypes.get(var_name, str), func_default_vars.get(var_name, None))
     return parser
@@ -50,6 +56,6 @@ def argument_add(parser, var_name, var_dtype, func_default_var):
     else:
         # other type
         if func_default_var:
-            parser.add_argument('--{}'.format(var_name), type=var_dtype, default=func_default_var, help='{}, default {}, type:{}'.format(var_name, func_default_var, var_dtype.__name__))
+            parser.add_argument('--{}'.format(var_name), type=var_dtype, default=func_default_var, help='{}, default:{}, type:{}'.format(var_name, func_default_var, var_dtype.__name__))
         else:
             parser.add_argument('--{}'.format(var_name), type=var_dtype, required=True, help='{}, type:{}'.format(var_name, var_dtype.__name__))

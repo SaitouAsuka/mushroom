@@ -16,12 +16,12 @@ def func_parser(func:function):
 
     if args_cnt == 0:
         # can run directly
-        arg_parser = arg_builder.build_blank_parser(func.__name__)
+        arg_parser = arg_builder.build_blank_parser(func.__name__, func.__doc__)
         args = arg_parser.parse_args()
         kwargs = {var_name: getattr(args, var_name) for var_name in func_varnames if getattr(args, var_name)}
         func(**kwargs)
     else:
-        arg_parser = arg_builder.build_args_parser(func_varnames, args_dtypes, default_flags, func.__name__)
+        arg_parser = arg_builder.build_args_parser(func_varnames, args_dtypes, default_flags, func.__name__, func.__doc__)
         args = arg_parser.parse_args()
         kwargs = {var_name: getattr(args, var_name) for var_name in func_varnames}
         func(**kwargs)
