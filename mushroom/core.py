@@ -8,6 +8,7 @@ def Mushroom(func):
     """
     one command type console app
     """
+    rslt = None
     if isinstance(func, function):
         rslt = func_parser(func)
 
