@@ -64,17 +64,27 @@ bool类型的变量只需要 --flag即可
 from typing import List
 import mushroom
 
-def sum(nums:List[int]):
+def my_sum(nums:List[int]):
     return sum(nums)
 
 if __name__ == "__main__":
-    mushroom.Mushroom(sum)
+    mushroom.Mushroom(my_sum)
 ```
 这样可以在命令行中执行：
 ```SHELL
 python sum.py --nums 1 2 3 # 6
 ```
 此外，如果List里面没有标明是什么类型的话，默认为int
+
+## 函数的help doc
+如果希望展示自己编写脚本的说明，只需要在编写的时候写对应的文档即可。
+```PYTHON
+def my_func():
+    """
+    some document
+    """
+    pass
+```
 
 # TODO list
 - 模块多命令模式没有实现

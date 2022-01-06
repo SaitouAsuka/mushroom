@@ -12,7 +12,5 @@ def Mushroom(func):
     if isinstance(func, function):
         rslt = func_parser(func)
 
-
     if rslt:
-        # 如果return就会执行输出
         print(rslt)
