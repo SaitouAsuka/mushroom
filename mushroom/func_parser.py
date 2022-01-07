@@ -44,7 +44,8 @@ def run_func(args, func, isClass=False, self=None):
     run the function
     """
     start_idx = 1 if isClass else 0
-    kwargs = {var_name: getattr(args, var_name) for var_name in func.__code__.co_varnames[start_idx:] if getattr(args, var_name)}
+    args_cnt = func.__code__.co_argcount
+    kwargs = {var_name: getattr(args, var_name) for var_name in func.__code__.co_varnames[start_idx:args_cnt] if getattr(args, var_name)}
     if self:
         kwargs['self'] = self
     func(**kwargs)
