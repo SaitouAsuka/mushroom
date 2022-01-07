@@ -1,47 +1,51 @@
 # one command type console app
 from __future__ import absolute_import
-from re import findall
 from types import FunctionType as function
 import mushroom.arg_builder as arg_builder
+import mushroom.args_fetch as args_fetch
 
 
 def func_parser(func:function):
     """
 
     """
-    args_cnt = func.__code__.co_argcount
-    func_varnames = func.__code__.co_varnames[:args_cnt]
-    args_dtypes = func.__annotations__
-    default_flags = fetch_defaults(func, func_varnames)
+    args_cnt, func_varnames, args_dtypes, default_flags = args_fetch.args_status_fetch(func, isClass=False)
 
     if args_cnt == 0:
         # can run directly
         arg_parser = arg_builder.build_blank_parser(func.__name__, func.__doc__)
-        args = arg_parser.parse_args()
-        kwargs = {var_name: getattr(args, var_name) for var_name in func_varnames if getattr(args, var_name)}
-        func(**kwargs)
     else:
         arg_parser = arg_builder.build_args_parser(func_varnames, args_dtypes, default_flags, func.__name__, func.__doc__)
-        args = arg_parser.parse_args()
-        kwargs = {var_name: getattr(args, var_name) for var_name in func_varnames}
-        func(**kwargs)
+
+    return arg_parser
 
 
-def fetch_defaults(func, func_varnames):
+def class_parser(class_):
     """
-    fetch default values for the function
-    return a dict
     """
-    func_defaults = func.__defaults__
+    # initialize first
+    parser, subparser = arg_builder.build_class_init_method(class_)
+    # iter the method of class
+    for func_name, func in class_.__dict__.items():
+        if isinstance(func, function) and not func_name.startswith("_"):
+            # function type
+            args_cnt, func_vars, func_dtypes, func_default_vars = args_fetch.args_status_fetch(func, isClass=True)
+            if args_cnt == 0:
+                # can run directly
+                arg_builder.build_blank_sub_parser(func, subparser)
+            else:
+                # need args parser
+                arg_builder.build_args_sub_parser(func, subparser, func_vars, func_dtypes, func_default_vars)
+    return parser
+        
 
-    func_defaults_dict = {}
-    if not func_defaults:
-        return func_defaults_dict
-
-    func_defaults = func_defaults[::-1]
-    func_varnames = func_varnames[::-1]
-    for i in range(len(func_defaults)):
-        func_defaults_dict[func_varnames[i]] = func_defaults[i]
-
-    return func_defaults_dict
+def run_func(args, func, isClass=False, self=None):
+    """
+    run the function
+    """
+    start_idx = 1 if isClass else 0
+    kwargs = {var_name: getattr(args, var_name) for var_name in func.__code__.co_varnames[start_idx:] if getattr(args, var_name)}
+    if self:
+        kwargs['self'] = self
+    func(**kwargs)
 
