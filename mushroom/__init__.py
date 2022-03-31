@@ -3,4 +3,4 @@ from __future__ import division
 from mushroom.core import Mushroom
 
 __all__ = ['Mushroom']
-__version__ = '0.0.4'
+__version__ = '0.0.5'

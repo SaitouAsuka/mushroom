@@ -94,7 +94,7 @@ def argument_add(parser, var_name, var_dtype, func_default_var):
         parser.add_argument('--{}'.format(var_name), nargs='+', type=type_dict[dtype], help='{}, element type: {}'.format(var_name, dtype))
     else:
         # other type
-        if func_default_var:
+        if func_default_var is not None:
             parser.add_argument('--{}'.format(var_name), type=var_dtype, default=func_default_var, help='{}, default:{}, type:{}'.format(var_name, func_default_var, var_dtype.__name__))
         else:
             parser.add_argument('--{}'.format(var_name), type=var_dtype, required=True, help='{}, type:{}'.format(var_name, var_dtype.__name__))
