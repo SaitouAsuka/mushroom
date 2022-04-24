@@ -12,4 +12,4 @@ def hello(name:str="World", flag:bool=False):
 
 
 if __name__ == "__main__":
-    mushroom.Mushroom(hello)
+    mushroom.Mushroom(hello, timer=True)

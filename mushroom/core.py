@@ -1,14 +1,20 @@
 from __future__ import absolute_import
+from textwrap import wrap
+import time
+from functools import wraps
 import types
 from mushroom.func_parser import func_parser, run_func, class_parser
 
 
 
-def Mushroom(func):
+def Mushroom(func, timer=False):
     """
     one command type console app
     """
     rslt = None
+    if timer:
+        start_time = time.time()
+
     if isinstance(func, types.FunctionType):
         # function type
         argparser = func_parser(func)
@@ -31,3 +37,17 @@ def Mushroom(func):
 
     if rslt:
         print(rslt)
+
+    if timer:
+        print("[INFO] Time cost: {}s".format(time.time() - start_time))
+
+
+
+def mushroom(timer=False):
+    def main_func(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            Mushroom(func, timer)
+        return wrapper
+    return main_func
+
