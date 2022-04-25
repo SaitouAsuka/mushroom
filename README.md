@@ -21,6 +21,17 @@ def hello(name:str="World"):
 if __name__ == "__main__":
     mushroom.Mushroom(hello)
 ```
+Or using mushroom in this way(decorator).
+```PYTHON
+import mushroom
+
+@mushroom.mushroom()
+def hello(name:str="World"):
+    print("Hello {}".format(name))
+
+if __name__ == "__main__":
+    hello()
+```
 Then you can use it like this:
 
 ```SHELL
@@ -33,6 +44,9 @@ python hello.py # Hello World
 
 ## 一般用法
 该模块只需要引入后直接作用与主入口函数后，便可以识别主入口函数的变量并且生成对应的命令行。
+
+> New:增加了修饰器的使用方式
+
 所以需要主函数在定义传入变量是注明是什么类型的变量,跟例子展示的一样。
 没有注明则认为是str类型。
 
@@ -86,6 +100,84 @@ def my_func():
     pass
 ```
 
+## 修饰类进行多命令利用
+
+如果有子命令的话，可以构建一个类并且对此进行修饰使用。
+```PYTHON
+import mushroom
+
+
+class Main(object):
+    """
+    hello app
+    """
+
+    def __init__(self, name="me"):
+        self.name = name
+
+    def say_hello(self):
+        """
+        self intruduce
+        """
+        print("My name is {}".format(self.name))
+
+    def say_bye(self, other):
+        """
+        say bye to other
+        """
+        print("Bye {}".format(other))
+
+
+if __name__ == '__main__':
+    mushroom.Mushroom(Main)
+```
+这个时候 *say_hello* 和 *say_bye* 是 这个脚本的子命令。
+当然也可以用修饰器的模式。
+```PYTHON
+import mushroom
+
+
+@mushroom.mushroom()
+class Main(object):
+    """
+    hello app
+    """
+
+    def __init__(self, name="me"):
+        self.name = name
+
+    def say_hello(self):
+        """
+        self intruduce
+        """
+        print("My name is {}".format(self.name))
+
+    def say_bye(self, other):
+        """
+        say bye to other
+        """
+        print("Bye {}".format(other))
+
+
+if __name__ == '__main__':
+    Main()
+```
+
+
+# 其他功能
+## 计时
+可以对程序的耗时进行计算，只需要将参数timer设置为True即可。
+```PYTHON
+import mushroom
+
+# @mushroom.mushroom(timer=True)
+def hello(name:str="World"):
+    print("Hello {}".format(name))
+
+if __name__ == "__main__":
+    mushroom.Mushroom(hello, timer=True)
+```
+
+
 # TODO list
-- 模块多命令模式没有实现
 - mushroom需要改成单例模式
