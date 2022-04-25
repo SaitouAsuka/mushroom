@@ -3,11 +3,17 @@ A simple tool for generate the console app
 
 # Installation
 
+## Install from source code
 To install Mushroom from source, first clone the repository and then run: 
 ```SHELL
 python setup.py install
 ```
 
+## Install from pypi
+Or install from pypi through command below:
+```PYTHON
+pip install mushroom-cli
+```
 
 # Basic Usage
 
