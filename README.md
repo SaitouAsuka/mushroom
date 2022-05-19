@@ -184,6 +184,17 @@ if __name__ == "__main__":
     mushroom.Mushroom(hello, timer=True)
 ```
 
+## 参数缩写
+除了提供长参数外，mushroom还可以提供对应的短参数方便使用。
+短参数的构建规则为：
+- 参数的首字母为改长参数的短参数，譬如 `-a` 是 `--alpha`的短参数。
+- 参数如果由多个单词和下划线组成，则每个单词的首字母拼接后便是短参数。譬如`-fa` 是`--flag_alpha`的短参数。
+- 出现短参数冲突时，有两种调整的方法`number`和`letter`
+    - `number`主要是在重复的短参数后面加个数字用作区分。目前默认是number，尚未在模块中开放修改参数。
+    - `letter`主要是出现重复的短参数后，搜索尚为使用的单字母作为该参数的短参数。
 
 # TODO list
 - mushroom需要改成单例模式
+
+- 识别main入口文档中parameter字段，然后给option加注释。
+- 用inspect模块重写整个模块（待定）。
