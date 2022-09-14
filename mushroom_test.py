@@ -1,10 +1,13 @@
 import mushroom
-import requests
 
 
 def hello(nums:int=3, name:str="World", flag_a:bool=False):
     """
     This is a hello app.
+
+    @para:name:人名
+    @para:nums:重复次数
+    @para:flag_a:一个flag
     """
     print("Hello {}".format(name))
     print("times:{}".format(nums))

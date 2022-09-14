@@ -12,7 +12,7 @@ def Mushroom(func, timer=False):
     """
     rslt = None
     if timer:
-        start_time = time.time()
+        start_time = time.perf_counter()
 
     if isinstance(func, types.FunctionType):
         # function type
@@ -38,7 +38,7 @@ def Mushroom(func, timer=False):
         print(rslt)
 
     if timer:
-        print("[INFO] Time cost: {}s".format(time.time() - start_time))
+        print("[INFO] Time cost: {}s".format(time.perf_counter() - start_time))
 
 
 

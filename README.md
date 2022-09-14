@@ -193,8 +193,52 @@ if __name__ == "__main__":
     - `number`主要是在重复的短参数后面加个数字用作区分。目前默认是number，尚未在模块中开放修改参数。
     - `letter`主要是出现重复的短参数后，搜索尚为使用的单字母作为该参数的短参数。
 
+## 参数说明
+可以在main入口文档里面写入@para字段，然后给自己的option加上标注。
+```
+# mushroom_test.py
+import mushroom
+
+
+def hello(nums:int=3, name:str="World", flag_a:bool=False):
+    """
+    This is a hello app.
+
+    @para:name:人名
+    @para:nums:重复次数
+    @para:flag_a:一个flag
+    """
+    print("Hello {}".format(name))
+    print("times:{}".format(nums))
+    if flag_a:
+        print("This is True")
+
+
+if __name__ == "__main__":
+    mushroom.Mushroom(hello, timer=True)
+```
+然后在命令行输入
+```SHELL
+> python mushroom_test.py -h
+
+usage: mushroom_test.py [-h] [--nums NUMS] [--name NAME] [--flag_a]
+
+    This is a hello app.
+
+    @para:name:人名
+    @para:nums:重复次数
+    @para:flag_a:一个flag
+
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --nums NUMS, -n NUMS  重复次数, default:3, type:int
+  --name NAME, -n2 NAME
+                        人名, default:World, type:str
+  --flag_a, -fa         一个flag, deafult:False, it will be True if it's applied.
+```
+
 # TODO list
 - mushroom需要改成单例模式
-
 - 识别main入口文档中parameter字段，然后给option加注释。
 - 用inspect模块重写整个模块（待定）。
