@@ -45,7 +45,7 @@ def run_func(args, func, isClass=False, self=None):
     """
     start_idx = 1 if isClass else 0
     args_cnt = func.__code__.co_argcount
-    kwargs = {var_name: getattr(args, var_name) for var_name in func.__code__.co_varnames[start_idx:args_cnt] if getattr(args, var_name)}
+    kwargs = {var_name: getattr(args, var_name) for var_name in func.__code__.co_varnames[start_idx:args_cnt] if hasattr(args, var_name)}
     if self:
         kwargs['self'] = self
     return func(**kwargs)
