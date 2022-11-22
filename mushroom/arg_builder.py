@@ -147,6 +147,10 @@ def helper_builder_from_doc(func_doc):
     如果文档里面有特殊的flag，可以将其转为说明
     """
     var_helper = {}
+
+    if func_doc is None:
+        return var_helper
+        
     for line in func_doc.split("\n"):
         if line.strip().startswith("@para"):
             match = re.search("@para\s*:\s*([A-Za-z_]*)\s*:(.*)", line)
