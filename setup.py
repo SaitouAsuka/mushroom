@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="mushroom_cli",
-    version="0.2.5",
+    version="0.3.0",
     author="Asriel",
     description=("This is a library for generating the command line interfaces for python scripts."),
     license="MIT",

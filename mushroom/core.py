@@ -5,8 +5,7 @@ import types
 from mushroom.func_parser import func_parser, run_func, class_parser
 
 
-
-def Mushroom(func, timer=False):
+def Mushroom(func, timer=False, traceback=False):
     """
     one command type console app
     """
@@ -18,7 +17,7 @@ def Mushroom(func, timer=False):
         # function type
         argparser = func_parser(func)
         args = argparser.parse_args()
-        rslt = run_func(args, func)
+        rslt = run_func(args, func, traceback=traceback)
     elif type(func) == type:
         # class type
         argparser = class_parser(func)
@@ -30,7 +29,7 @@ def Mushroom(func, timer=False):
         if not hasattr(args, 'func'):
             print("Subcommand not found, plz type -h or --help to get more information")
             return
-        rslt = run_func(args, args.func, isClass=True, self=instance_)
+        rslt = run_func(args, args.func, isClass=True, self=instance_, traceback=traceback)
     else:
         raise Exception("func must be function or class type")
 
@@ -42,11 +41,11 @@ def Mushroom(func, timer=False):
 
 
 
-def mushroom(timer=False):
+def mushroom(timer=False, traceback=False):
     def main_func(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            Mushroom(func, timer)
+            Mushroom(func, timer, traceback)
         return wrapper
     return main_func
 

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from types import FunctionType as function
 import mushroom.arg_builder as arg_builder
 import mushroom.args_fetch as args_fetch
+import mushroom.traceback_module as tb
 
 
 def func_parser(func:function):
@@ -39,7 +40,7 @@ def class_parser(class_):
     return parser
         
 
-def run_func(args, func, isClass=False, self=None):
+def run_func(args, func, isClass=False, self=None, traceback=False):
     """
     run the function
     """
@@ -48,5 +49,13 @@ def run_func(args, func, isClass=False, self=None):
     kwargs = {var_name: getattr(args, var_name) for var_name in func.__code__.co_varnames[start_idx:args_cnt] if hasattr(args, var_name)}
     if self:
         kwargs['self'] = self
+    if traceback:
+        try:
+            return func(**kwargs)
+        except Exception as e:
+            print(e)
+            f = tb.fetch_frame_handle()
+            tb.interactive_ter(f)
+            
     return func(**kwargs)
 
