@@ -1,8 +1,10 @@
 from __future__ import absolute_import
+import sys
 import time
 from functools import wraps
 import types
 from mushroom.func_parser import func_parser, run_func, class_parser
+import mushroom.traceback_module as tb
 
 
 def Mushroom(func, timer=False, traceback=False):
@@ -13,11 +15,14 @@ def Mushroom(func, timer=False, traceback=False):
     if timer:
         start_time = time.perf_counter()
 
+    if traceback:
+        sys.excepthook = tb.global_excepthook
+
     if isinstance(func, types.FunctionType):
         # function type
         argparser = func_parser(func)
         args = argparser.parse_args()
-        rslt = run_func(args, func, traceback=traceback)
+        rslt = run_func(args, func)
     elif type(func) == type:
         # class type
         argparser = class_parser(func)
@@ -29,7 +34,7 @@ def Mushroom(func, timer=False, traceback=False):
         if not hasattr(args, 'func'):
             print("Subcommand not found, plz type -h or --help to get more information")
             return
-        rslt = run_func(args, args.func, isClass=True, self=instance_, traceback=traceback)
+        rslt = run_func(args, args.func, isClass=True, self=instance_)
     else:
         raise Exception("func must be function or class type")
 

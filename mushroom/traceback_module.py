@@ -14,13 +14,23 @@ USAGE_DOC = """
 """
 
 
-def fetch_frame_handle():
-    return sys.exc_info()[2].tb_frame
+def global_excepthook(ttype,tvalue,ttraceback):
+    print("错误类型：{}".format(ttype))
+    print("错误信息：{}".format(tvalue))
+
+    stacks = []
+    while ttraceback:
+        stacks.append(ttraceback)
+        ttraceback = ttraceback.tb_next
+    interactive_ter(stacks[::-1])
 
 
-def interactive_ter(f):
+def interactive_ter(stacks):
     # 交互终端设计
-    next_frame = []
+    idx = 0
+    stacks_depth = len(stacks)
+
+    f = stacks[idx].tb_frame
     global_values = f.f_globals
     local_values = f.f_locals
     while True:
@@ -49,22 +59,25 @@ def interactive_ter(f):
         elif cmd == "show":
             print(f)
         elif cmd in ("back", "b"):
-            if not f.f_back:
+            if idx >= stacks_depth - 1:
                 print("无法再返回上一层")
             else:
-                next_frame.append(f)
-                f = f.f_back
+                idx += 1
+                f = stacks[idx].tb_frame
                 global_values = f.f_globals
                 local_values = f.f_locals
                 print(f)
+                print("函数名：{}".format(f.f_code.co_name))
         elif cmd in ("step", 's'):
-            if not next_frame:
+            if idx == 0:
                 print("已经是最底层了")
             else:
-                f = next_frame.pop()
+                idx -= 1
+                f = stacks[idx].tb_frame
                 global_values = f.f_globals
                 local_values = f.f_locals
                 print(f)
+                print("函数名：{}".format(f.f_code.co_name))
         elif cmd in ("q", 'exit', 'quit'):
             sys.exit(0)
         else:
