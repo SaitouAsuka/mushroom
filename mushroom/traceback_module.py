@@ -1,4 +1,5 @@
 import sys
+import traceback
 
 
 USAGE_DOC = """
@@ -15,9 +16,13 @@ USAGE_DOC = """
 
 
 def global_excepthook(ttype,tvalue,ttraceback):
-    print("错误类型：{}".format(ttype))
-    print("错误信息：{}".format(tvalue))
-
+    print("错误类型：\033[91m {} \033[0m".format(ttype))
+    print("错误信息：\033[91m {} \033[0m".format(tvalue))
+    print("=" * 30)
+    traceback_details = traceback.format_exception(ttype,tvalue,ttraceback)
+    traceback_string = "".join(traceback_details)
+    print(traceback_string)
+    print("=" * 30)
     stacks = []
     while ttraceback:
         stacks.append(ttraceback)
@@ -34,7 +39,7 @@ def interactive_ter(stacks):
     global_values = f.f_globals
     local_values = f.f_locals
     while True:
-        cmd = input(">> ").strip()
+        cmd = input("\033[92m >> \033[0m").strip()
         if cmd in ("?", "h", "help"):
             print(USAGE_DOC)
         elif cmd.startswith("print"):
@@ -51,9 +56,9 @@ def interactive_ter(stacks):
         elif cmd.startswith("all"):
             cmd = cmd.split()
             if len(cmd) == 1 or cmd[-1] == "local":
-                print_all_var(local_values, filter_func=lambda x: not x.startswith("__"))
+                print_all_var(local_values)
             elif cmd[-1] == "global":
-                print_all_var(global_values, filter_func=lambda x: not x.startswith("__"))
+                print_all_var(global_values)
             else:
                 print("Invaild option: {}".format(" ".join(cmd[1:])))
         elif cmd == "show":
