@@ -7,7 +7,7 @@ from mushroom.func_parser import func_parser, run_func, class_parser
 import mushroom.traceback_module as tb
 
 
-def Mushroom(func, timer=False, traceback=False):
+def Mushroom(func, timer=False, traceback=False, strict_mode=True):
     """
     one command type console app
     """
@@ -20,12 +20,12 @@ def Mushroom(func, timer=False, traceback=False):
 
     if isinstance(func, types.FunctionType):
         # function type
-        argparser = func_parser(func)
+        argparser = func_parser(func, strict_mode=strict_mode)
         args = argparser.parse_args()
         rslt = run_func(args, func)
     elif type(func) == type:
         # class type
-        argparser = class_parser(func)
+        argparser = class_parser(func, strict_mode=strict_mode)
         args = argparser.parse_args()
         # initialize first
         kwargs = {var_name: getattr(args, var_name) for var_name in func.__init__.__code__.co_varnames[1:] if getattr(args, var_name)}

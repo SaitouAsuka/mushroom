@@ -5,11 +5,11 @@ import mushroom.arg_builder as arg_builder
 import mushroom.args_fetch as args_fetch
 
 
-def func_parser(func:function):
+def func_parser(func:function, strict_mode:bool=True):
     """
 
     """
-    args_cnt, func_varnames, args_dtypes, default_flags = args_fetch.args_status_fetch(func, isClass=False)
+    args_cnt, func_varnames, args_dtypes, default_flags = args_fetch.args_status_fetch(func, isClass=False, strict_mode=strict_mode)
 
     if args_cnt == 0:
         # can run directly
@@ -20,7 +20,7 @@ def func_parser(func:function):
     return arg_parser
 
 
-def class_parser(class_):
+def class_parser(class_, strict_mode:bool=True):
     """
     """
     # initialize first
@@ -29,7 +29,7 @@ def class_parser(class_):
     for func_name, func in class_.__dict__.items():
         if isinstance(func, function) and not func_name.startswith("_"):
             # function type
-            args_cnt, func_vars, func_dtypes, func_default_vars = args_fetch.args_status_fetch(func, isClass=True)
+            args_cnt, func_vars, func_dtypes, func_default_vars = args_fetch.args_status_fetch(func, isClass=True, strict_mode=strict_mode)
             if args_cnt == 0:
                 # can run directly
                 arg_builder.build_blank_sub_parser(func, subparser)
