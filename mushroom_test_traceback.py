@@ -7,8 +7,8 @@ class A:
 
 
 def main(a:int, b:float=0):
-    tmp = {"1" : 1}
-    mushroom.add_breakpoint()
+    tmp = {"1" : [1,23]}
+    # mushroom.add_breakpoint()
     ta = A(8)
     print(a / b)
 
