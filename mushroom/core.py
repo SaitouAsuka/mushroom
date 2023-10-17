@@ -46,11 +46,11 @@ def Mushroom(func, timer=False, traceback=False, strict_mode=True):
 
 
 
-def mushroom(timer=False, traceback=False):
+def mushroom(timer=False, traceback=False, strict_mode=True):
     def main_func(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            Mushroom(func, timer, traceback)
+            Mushroom(func, timer, traceback, strict_mode)
         return wrapper
     return main_func
 

@@ -238,7 +238,79 @@ optional arguments:
   --flag_a, -fa         一个flag, deafult:False, it will be True if it's applied.
 ```
 
+## 关闭严格的参数检查功能
+前面提到，mushroom会根据在定义入口函数时的参数注释进行数据类型检查。这是为了防止传入的参数与预期的不符合。但如果希望关闭检查功能，或者程序内部会对数据类型进行检查，可以设置`mushroom.Mushroom(strict_mode=False)`进行关闭（默认开启）。
+
+## 错误追踪功能
+mushroom在0.3.2后新增了错误追踪功能并且在0.3.4版进行了完善。可以设置`mushroom.Mushroom(traceback=True)`进行开启（默认关闭）。当开启了错误追踪后，如果运行的程序出现Exception，mushroom会将其捕获并且提供类pdb的界面对当前的堆栈进行检查。
+
+```PYTHON
+# mushroom_test_traceback.py
+import mushroom
+
+
+def main(a:int, b:float=0):
+    print(a / b)
+
+
+if __name__ == '__main__':
+    mushroom.Mushroom(main, traceback=True, strict_mode=False)
+
+```
+```SHELL
+python mushroom_test_traceback.py -a 1 -b 0
+
+错误类型： <class 'ZeroDivisionError'> 
+错误信息： float division by zero 
+==============================
+Traceback (most recent call last):
+  File "mushroom_test_traceback.py", line 9, in <module>
+    mushroom.Mushroom(main, traceback=True, strict_mode=False)
+  File "/usr/anaconda3/lib/python3.8/site-packages/mushroom/core.py", line 25, in Mushroom
+    rslt = run_func(args, func)
+  File "/usr/anaconda3/lib/python3.8/site-packages/mushroom/func_parser.py", line 52, in run_func
+    return func(**kwargs)
+  File "mushroom_test_traceback.py", line 5, in main
+    print(a / b)
+ZeroDivisionError: float division by zero
+
+==============================
+Welcome to the shell, type help or ? to list commands.
+
+ >> help
+
+Documented commands (type help <topic>):
+========================================
+all  back  continue  help  list  print  show  step
+
+Undocumented commands:
+======================
+exit  quit
+
+ >> help list
+打印当前所有的非私有变量,如果是local则打印locals()里面的,如果是global则打印globals()里面的,默认local
+ >> list
+'a; b'
+ >> help print
+
+        打印当前frame里面的变量,可以支持索引以及方法的打印
+
+        examle: 
+            >> print var_name
+            >> print var_name.attr_name
+            >> print var_name["key"]
+            >> print var_name[1]
+            >> print var_name.type
+        
+        
+ >> print a
+'in locals: a : 1'
+ >> quit
+```
+这里的错误追踪跟pdb不一样，是通过python自身的exception hook进行捕获。所有只有简单的堆栈追踪以及变量打印的功能，不过作为当前状态检查够用了。
+```
+
 # TODO list
-- mushroom需要改成单例模式
-- 识别main入口文档中parameter字段，然后给option加注释。
-- 用inspect模块重写整个模块（待定）。
+- 还需要进一步完善变量的打印功能
+- 还需要进一步完善断点功能
+- 打算增加函数重载的功能
